@@ -73,13 +73,13 @@ This experiment highlights the substantial efficiency gain brought by KV cache i
 
 Standard self-attention is memory intensive because it explicitly materializes the full attention matrix:
 
-\[
+$$
 S = QK^T \in \mathbb{R}^{N \times N}
-\]
+$$
 
 For long sequences this results in **quadratic memory usage**, which quickly becomes the main bottleneck during training.
 
-Flash Attention avoids constructing the full attention matrix by computing attention **block-wise**. Blocks of \(Q,K,V\) are loaded into on-chip SRAM, and the softmax normalization is computed **online**. This allows attention to be computed without storing the \(N\times N\) matrix in GPU memory.
+Flash Attention avoids constructing the full attention matrix by computing attention **block-wise**. Blocks of $Q,K,V$ are loaded into on-chip SRAM, and the softmax normalization is computed **online**. This allows attention to be computed without storing the $N\times N$ matrix in GPU memory.
 
 Below is a simplified block implementation illustrating the core algorithm.
 
@@ -111,19 +111,19 @@ O = torch.cat(O,0)
 
 
 For each iteration j, the algorithm loads kj, vj, the scans the full Q, O. The resulting I/O complexity is 
-\[
+$$
 O(\dfrac{N}{B_c}(2B_cd + 2Nd)) = O(N^2d/B_c)
-\]
+$$
 
 Let the available SRAM size be M. Then
-\[
+$$
 B_c \sim O(M/d),\quad B_r\sim O(M/d),\quad B_r B_c\sim O(M)
-\]
+$$
 
 Substituting $B_c \sim O(M/d)$:
-\[
+$$
 O(N^2d/B_c)\sim O(N^2d^2/M)
-\]
+$$
 
 For GPT2-124M and RTX3090:
 ```text
@@ -133,11 +133,11 @@ dtype = FP16
 ```
 
 This yields
-\[
+$$
 d^2/M\sim 0.064
-\]
+$$
 
-While standard attention also relies on implicit tiling due to SRAM constraints, resulting in an I/O complexity $O(N^2d/B_c)$, its defining characteristic and primary bottleneck is the need to materialize the \(N\times N\) attention weight matrix. This leads to a memory complexity of $O(N^2)$, which in practice dominates the $O(N^2d^2/M)$ I/O cost of Flash Attention.
+While standard attention also relies on implicit tiling due to SRAM constraints, resulting in an I/O complexity $O(N^2d/B_c)$, its defining characteristic and primary bottleneck is the need to materialize the $N\times N$ attention weight matrix. This leads to a memory complexity of $O(N^2)$, which in practice dominates the $O(N^2d^2/M)$ I/O cost of Flash Attention.
 
 # Experiment
 This section presents empirical measurements of memory usage and throughput under several commonly used optimization techniques.  
