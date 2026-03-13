@@ -160,7 +160,7 @@ model GPT2-124M
 |BF16|15.64GB|27699|
 |BF16+complie|11.95GB|46431|
 |+flash attention|7.41GB|58612|
-|+50257$\to$ 50304|6.66GB|60127|
+|+50257 $\to$ 50304|6.66GB|60127|
 ### Memory Composition
 GPU memory usage can be roughly divided into two components:
 1. **Model state**: model weights, gradients, optimizer states. For GPT2-124M, this part occupies approximately 1.94GB.
