@@ -111,16 +111,19 @@ O = torch.cat(O,0)
 
 
 For each iteration j, the algorithm loads kj, vj, the scans the full Q, O. The resulting I/O complexity is 
+
 $$
 O(\dfrac{N}{B_c}(2B_cd + 2Nd)) = O(N^2d/B_c)
 $$
 
 Let the available SRAM size be M. Then
+
 $$
 B_c \sim O(M/d),\quad B_r\sim O(M/d),\quad B_r B_c\sim O(M)
 $$
 
 Substituting $B_c \sim O(M/d)$:
+
 $$
 O(N^2d/B_c)\sim O(N^2d^2/M)
 $$
@@ -133,6 +136,7 @@ dtype = FP16
 ```
 
 This yields
+
 $$
 d^2/M\sim 0.064
 $$
