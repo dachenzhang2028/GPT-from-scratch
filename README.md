@@ -176,9 +176,11 @@ The following observations summarize the impact of each optimization technique:
    TF32 accelerates tensor core matrix multiplications while still producing FP32 outputs. As a result, it improves compute throughput but does not reduce peak memory usage.
 
 2. **BF16**
+   
    BF16 reduces the storage cost of many intermediate activations during the forward pass. However, since model parameters and optimizer states are still maintained in FP32 for numerical stability, the overall memory reduction is moderate.
 
 3. **`torch.compile`**
+   
    `torch.compile` improves performance primarily in **memory-bound workloads** by:
    - fusing multiple operations into larger kernels  
    - reducing intermediate tensor materialization  
@@ -187,6 +189,7 @@ The following observations summarize the impact of each optimization technique:
    These changes reduce activation storage and significantly increase training throughput.
 
 4. **Flash Attention**
+   
    Flash Attention addresses the main bottleneck of standard attention: the storage of the **attention weight matrix**. By computing attention in blocks and performing softmax normalization online, it eliminates the need to materialize the full attention matrix (4.5GB) and improves throughput.
 
 5. **Vocabulary Alignment**
